@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<FrameWorkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ECommerce.ServiceAbstractions\ECommerce.ServiceAbstractions.csproj" />
   </ItemGroup>
 
