@@ -1,5 +1,6 @@
 ﻿using ECommerce.Domin.Contract;
 using ECommerce.Domin.Models;
+using ECommerce.Persistence.Data;
 using ECommerce.Persistence.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -33,5 +34,21 @@ namespace ECommerce.Persistence.Repository
 
         public void UpdateAsync(TEntity entity)
             => _dbContext.Set<TEntity>().Update(entity);
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity, TKey> specification)
+        {
+            var Query = SpecificationEvaluator.CreateQuery(_dbContext.Set<TEntity>(), specification);
+            return await Query.ToListAsync();
+        }
+
+        public async Task<TEntity?> GetByIdAsync(ISpecification<TEntity, TKey> specification)
+        {
+            return await SpecificationEvaluator.CreateQuery(_dbContext.Set<TEntity>(), specification).FirstOrDefaultAsync();
+        }
+
+        public async Task<int> CountAsync(ISpecification<TEntity, TKey> specification)
+        {
+            return await SpecificationEvaluator.CreateQuery(_dbContext.Set<TEntity>(), specification).CountAsync();
+        }
     }
 }
