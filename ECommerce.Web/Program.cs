@@ -9,6 +9,7 @@ using ECommerce.Service.MappingFolder;
 using ECommerce.ServiceAbstractions;
 using ECommerce.Web.Extensions;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using System.Threading.Tasks;
 
 namespace ECommerce.Web
@@ -36,7 +37,15 @@ namespace ECommerce.Web
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddAutoMapper(X => X.AddProfile<ProductProfile>());
+            builder.Services.AddAutoMapper(X => X.AddProfile<BasketProfile>());
 
+            builder.Services.AddSingleton<IConnectionMultiplexer>(o =>
+            {
+                return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection")!);
+            });
+
+            builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+            builder.Services.AddScoped<IBasketService, BasketService>();
 
             var app = builder.Build();
 
