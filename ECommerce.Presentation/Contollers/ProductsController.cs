@@ -1,4 +1,5 @@
-﻿using ECommerce.ServiceAbstractions;
+﻿using ECommerce.Presentation.Attributes;
+using ECommerce.ServiceAbstractions;
 using ECommerce.Shared;
 using ECommerce.Shared.DTOS.ProductDTOS;
 using Microsoft.AspNetCore.Mvc;
@@ -22,21 +23,48 @@ namespace ECommerce.Presentation.Contollers
         }
 
         [HttpGet]
+        [RedisCache]
         public async Task<ActionResult<PaginatedResult<ProductDTO>>> GetAllProducts([FromQuery]ProductQueryParams queryParam)
         {
-            var products = await _productService.GetAllProductsAsync(queryParam);
-            return Ok(products);
+            try
+            {
+
+                var products = await _productService.GetAllProductsAsync(queryParam);
+                return Ok(products);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProductById(int id)
         {
-            var product = await _productService.GetProductByIdAsync(id);
-            if (product == null)
+            try
             {
-                return NotFound();
+                var product = await _productService.GetProductByIdAsync(id);
+                if (product is null)
+                    return NotFound($"No Proudcut with Id: {id} Found!");
+                return Ok(product);
             }
-            return Ok(product);
+            catch (Exception ex)
+            {
+                switch (ex)
+                {
+                    case ArgumentException:
+                        return BadRequest(ex.Message);
+                    case InvalidOperationException:
+                        return BadRequest("Invalid Operation Occurred.");
+                    case OutOfMemoryException:
+                        return StatusCode(503, "Service Unavaliable ! Try Again Later.");
+                    default:
+                        return StatusCode(500, "Internal Server Error Occurred.");
+
+                }
+            }
         }
 
         [HttpGet("brands")]
