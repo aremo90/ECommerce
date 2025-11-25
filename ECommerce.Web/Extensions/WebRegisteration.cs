@@ -24,7 +24,14 @@ namespace ECommerce.Web.Extensions
         public static async Task<WebApplication> SeedDataAsync(this WebApplication app)
         {
             await using var scope = app.Services.CreateAsyncScope();
-            var dataIniService = scope.ServiceProvider.GetRequiredService<IDataini>();
+            var dataIniService = scope.ServiceProvider.GetRequiredKeyedService<IDataini>("Default");
+            await dataIniService.InitilizeAsync();
+            return app;
+        }
+        public static async Task<WebApplication> SeedIdentityDataAsync(this WebApplication app)
+        {
+            await using var scope = app.Services.CreateAsyncScope();
+            var dataIniService = scope.ServiceProvider.GetRequiredKeyedService<IDataini>("Identity");
             await dataIniService.InitilizeAsync();
             return app;
         }

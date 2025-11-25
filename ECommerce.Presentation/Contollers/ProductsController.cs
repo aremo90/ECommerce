@@ -11,9 +11,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Presentation.Contollers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    public class ProductsController : ApiBaseController
     {
         private readonly IProductService _productService;
 
@@ -43,28 +41,8 @@ namespace ECommerce.Presentation.Contollers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProductById(int id)
         {
-            try
-            {
-                var product = await _productService.GetProductByIdAsync(id);
-                if (product is null)
-                    return NotFound($"No Proudcut with Id: {id} Found!");
-                return Ok(product);
-            }
-            catch (Exception ex)
-            {
-                switch (ex)
-                {
-                    case ArgumentException:
-                        return BadRequest(ex.Message);
-                    case InvalidOperationException:
-                        return BadRequest("Invalid Operation Occurred.");
-                    case OutOfMemoryException:
-                        return StatusCode(503, "Service Unavaliable ! Try Again Later.");
-                    default:
-                        return StatusCode(500, "Internal Server Error Occurred.");
-
-                }
-            }
+            var result = await _productService.GetProductByIdAsync(id);
+            return HandleRequest<ProductDTO>(result);
         }
 
         [HttpGet("brands")]
