@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using ECommerce.Domin.Contract;
 using ECommerce.Domin.Models.ProudctModule;
+using ECommerce.Service.Exceptions;
 using ECommerce.Service.Specification;
 using ECommerce.ServiceAbstractions;
 using ECommerce.Shared;
+using ECommerce.Shared.CommonResult;
 using ECommerce.Shared.DTOS.ProductDTOS;
 using System;
 using System.Collections.Generic;
@@ -49,14 +51,12 @@ namespace ECommerce.Service
         }
 
 
-        public async Task<ProductDTO> GetProductByIdAsync(int id)
+        public async Task<Result<ProductDTO>> GetProductByIdAsync(int id)
         {
             var Spec = new ProductWithBrandAndTypeSpecification(id);
-            if (id <= 0)
-            {
-                throw new ArgumentException("Invalid product ID.");
-            }
             var Prodcut = await _unitOfWork.GetRepositoryAsync<Product ,int>().GetByIdAsync(Spec);
+            if (Prodcut is null)
+                return Error.NotFound("Not Found!" , "Product Not Found") ;
             return _mapper.Map<ProductDTO>(Prodcut);
         }
     }

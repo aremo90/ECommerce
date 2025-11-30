@@ -1,4 +1,5 @@
-﻿using ECommerce.ServiceAbstractions;
+﻿using ECommerce.Presentation.Attributes;
+using ECommerce.ServiceAbstractions;
 using ECommerce.Shared;
 using ECommerce.Shared.DTOS.ProductDTOS;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Presentation.Contollers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    public class ProductsController : ApiBaseController
     {
         private readonly IProductService _productService;
 
@@ -22,21 +21,28 @@ namespace ECommerce.Presentation.Contollers
         }
 
         [HttpGet]
+        [RedisCache]
         public async Task<ActionResult<PaginatedResult<ProductDTO>>> GetAllProducts([FromQuery]ProductQueryParams queryParam)
         {
-            var products = await _productService.GetAllProductsAsync(queryParam);
-            return Ok(products);
+            try
+            {
+
+                var products = await _productService.GetAllProductsAsync(queryParam);
+                return Ok(products);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProductById(int id)
         {
-            var product = await _productService.GetProductByIdAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return Ok(product);
+            var result = await _productService.GetProductByIdAsync(id);
+            return HandleRequest<ProductDTO>(result);
         }
 
         [HttpGet("brands")]
