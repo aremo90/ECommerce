@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ECommerce.Shared.CommonResult;
+﻿using ECommerce.Shared.CommonResult;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 
 namespace ECommerce.Presentation.Contollers
@@ -71,6 +72,12 @@ namespace ECommerce.Presentation.Contollers
                 modelState.AddModelError(error.Code, error.Description);
             }
             return ValidationProblem(modelState);
+        }
+
+        protected string GetUserEmail()
+        {
+            var UserEmail = User.FindFirstValue(ClaimTypes.Email);
+            return UserEmail;
         }
 
     }

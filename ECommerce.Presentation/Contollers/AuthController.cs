@@ -1,5 +1,6 @@
 ﻿using ECommerce.ServiceAbstractions;
 using ECommerce.Shared.DTOS.AuthDTOS;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -35,5 +36,24 @@ namespace ECommerce.Presentation.Contollers
             return HandleRequest(result);
         }
         #endregion
+
+
+        [Authorize]
+        [HttpGet("emailExist")]
+        public async Task<ActionResult<bool>> CheckEmail(string email)
+        {
+            var Result = await _authService.CheckEmailAsync(email);
+            return Ok(Result);
+        }
+
+        [Authorize]
+        [HttpGet("CurrentUser")]
+        public async Task<ActionResult<UserDTO>> GetUserInfo()
+        {
+            var Result = await _authService.GetUserByEmailAsync(GetUserEmail());
+            return HandleRequest<UserDTO>(Result);
+        }
+
+
     }
 }

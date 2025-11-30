@@ -12,10 +12,13 @@ using ECommerce.ServiceAbstractions;
 using ECommerce.Web.CustomMiddleWares;
 using ECommerce.Web.Extensions;
 using ECommerce.Web.Factories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ECommerce.Web
@@ -70,13 +73,31 @@ namespace ECommerce.Web
                 options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
                 // Add-Migration "IdentityTableCreate" -OutDir "IdentityData/Migrations" -Context "StoreIdentityDbContext"
             });
-            //builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<StoreIdentityDbContext>();
+
 
             builder.Services.AddIdentityCore<ApplicationUser>()
                             .AddRoles<IdentityRole>()
                             .AddEntityFrameworkStores<StoreIdentityDbContext>();
             builder.Services.AddScoped<IAuthService , AuthService>();
+
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; // Auth
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // UnAuth
+            }).AddJwtBearer(opt =>
+            {
+                opt.SaveToken = true;
+                opt.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = builder.Configuration["JWTOptions:Issuer"],
+                    ValidAudience = builder.Configuration["JWTOptions:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["JWTOptions:secretKey"]!))
+                };
+            });
+
 
             var app = builder.Build();
 
@@ -101,6 +122,7 @@ namespace ECommerce.Web
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
