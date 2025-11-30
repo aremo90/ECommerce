@@ -19,29 +19,29 @@ namespace ECommerce.Shared.CommonResult
             Type = type;
         }
 
-        public static Error Failure(string code, string description)
+        public static Error Failure(string Code = "General Failure", string Description = "General Failure occured !")
         {
-            return new Error(code, description, ErrorType.Failure);
+            return new Error(Code, Description, ErrorType.Failure);
         }
-        public static Error Validation(string code, string description)
+        public static Error Validation(string Code = "Validation Error", string Description = "Validation Error occured !")
         {
-            return new Error(code, description, ErrorType.validation);
+            return new Error(Code, Description, ErrorType.validation);
         }
-        public static Error NotFound(string code, string description)
+        public static Error NotFound(string Code = "Not Found", string Description = "Error 404 Not Found !")
         {
-            return new Error(code, description, ErrorType.NotFound);
+            return new Error(Code, Description, ErrorType.NotFound);
         }
-        public static Error UnAuthorized(string code, string description)
+        public static Error Unauthorized(string Code = "Unauthorized Error", string Description = "Unauthorized occured !")
         {
-            return new Error(code, description, ErrorType.unAuthorized);
+            return new Error(Code, Description, ErrorType.unAuthorized);
         }
-        public static Error Forbidden(string code, string description)
+        public static Error Forbidden(string Code = "Forbidden Error", string Description = "Forbidden Error occured !")
         {
-            return new Error(code, description, ErrorType.forbidden);
+            return new Error(Code, Description, ErrorType.forbidden);
         }
-        public static Error InvalidCredentials(string code, string description)
+        public static Error InvalidCredentials(string Code = "InvalidCredentials Errors", string Description = "InvalidCredentials Errors occured !")
         {
-            return new Error(code, description, ErrorType.InvalidCredentials);
+            return new Error(Code, Description, ErrorType.InvalidCredentials);
         }
 
 
