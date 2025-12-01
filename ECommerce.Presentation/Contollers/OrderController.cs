@@ -38,7 +38,7 @@ namespace ECommerce.Presentation.Contollers
 
         //Get Order By Id
         [Authorize]
-        [HttpGet("OrderId")]
+        [HttpGet("{Id:guid}")]
         public async Task<ActionResult<OrderToReturnDTO>> GetOrder(Guid Id)
         {
             var Order = await _orderService.GetOrderByIdAsync(Id , GetUserEmail());
