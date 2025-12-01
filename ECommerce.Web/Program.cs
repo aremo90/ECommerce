@@ -52,6 +52,7 @@ namespace ECommerce.Web
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddAutoMapper(X => X.AddProfile<ProductProfile>());
             builder.Services.AddAutoMapper(X => X.AddProfile<BasketProfile>());
+            builder.Services.AddAutoMapper(X => X.AddProfile<OrderProfile>());
 
             builder.Services.AddSingleton<IConnectionMultiplexer>(o =>
             {
@@ -98,6 +99,7 @@ namespace ECommerce.Web
                 };
             });
 
+            builder.Services.AddScoped<IOrderService, OrderService>();
 
             var app = builder.Build();
 
