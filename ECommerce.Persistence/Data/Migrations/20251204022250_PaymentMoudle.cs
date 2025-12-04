@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ECommerce.Persistence.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class OrderMoudle : Migration
+    public partial class PaymentMoudle : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,7 +41,8 @@ namespace ECommerce.Persistence.Data.Migrations
                     Address_Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DeliveryMethodId = table.Column<int>(type: "int", nullable: false),
                     OrderStatus = table.Column<int>(type: "int", nullable: false),
-                    SubTotal = table.Column<decimal>(type: "decimal(8,2)", nullable: false)
+                    SubTotal = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    PaymentIntentId = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

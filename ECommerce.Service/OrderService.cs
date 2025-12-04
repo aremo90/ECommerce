@@ -46,6 +46,18 @@ namespace ECommerce.Service
             if (Basket is null)
                 return Error.NotFound("Basket Not Found");
 
+            // Check PaymentIntent
+            ArgumentNullException.ThrowIfNullOrEmpty(Basket.PaymentIntentId);
+            var OrderRepo = _unitOfWork.GetRepositoryAsync<Order, Guid>();
+
+
+            var Spec = new OrderWithPaymentIntentSpec(Basket.PaymentIntentId);
+            var ExistOrder = await OrderRepo.GetByIdAsync(Spec);
+            if (ExistOrder is not null) OrderRepo.DeleteAsync(ExistOrder);
+
+
+
+
             // Step 3 :-
             // If Basket is not null => Products in basket => List<OrderItem>
             List<OrderItem> OrderItems = new List<OrderItem>();
@@ -76,6 +88,7 @@ namespace ECommerce.Service
                 Items = OrderItems,
                 SubTotal = SubTotal,
                 UserEmail = email,
+                PaymentIntentId = Basket.PaymentIntentId,
             };
 
             // Step 7 :-
