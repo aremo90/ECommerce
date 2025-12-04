@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Persistence.Data.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20251201012441_OrderMoudle")]
-    partial class OrderMoudle
+    [Migration("20251204022250_PaymentMoudle")]
+    partial class PaymentMoudle
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,9 @@ namespace ECommerce.Persistence.Data.Migrations
 
                     b.Property<int>("OrderStatus")
                         .HasColumnType("int");
+
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SubTotal")
                         .HasColumnType("decimal(8,2)");

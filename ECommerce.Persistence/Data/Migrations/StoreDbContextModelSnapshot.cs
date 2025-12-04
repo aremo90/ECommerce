@@ -68,6 +68,9 @@ namespace ECommerce.Persistence.Data.Migrations
                     b.Property<int>("OrderStatus")
                         .HasColumnType("int");
 
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("SubTotal")
                         .HasColumnType("decimal(8,2)");
 
