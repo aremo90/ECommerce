@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ECommerce.Domin.Models.ProudctModule
+{
+    public class Product : BaseEntity<int>
+    {
+        public string Name { get; set; } = null!;
+        public string Description { get; set; } = null!;
+        public string PictureUrl { get; set; } = null!;
+        public decimal Price { get; set; }
+
+
+
+        #region RS
+        // fk in fluent API
+        public int BrandId { get; set; }
+        public int TypeId { get; set; } 
+
+        public ProductBrand ProductBrands { get; set; }
+        public ProductType ProductTypes { get; set; }
+
+
+        #endregion
+    }
+}
